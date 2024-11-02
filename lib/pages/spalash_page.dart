@@ -34,9 +34,7 @@ class SplashScreen extends StatelessWidget {
                     color: const Color(0xff8789A3),
                     fontWeight: FontWeight.w400),
               ),
-              SizedBox(
-                height: 20,
-              ),
+              const SizedBox(height: 20),
               Stack(children: [
                 Padding(
                   padding: const EdgeInsets.all(24.0),
