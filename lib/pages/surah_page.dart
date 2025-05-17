@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:slicing_uiquran/cubit/cubit/lokal_cubit.dart';
 import 'package:slicing_uiquran/cubit/surat_cubit/surat_cubit.dart';
 import 'package:slicing_uiquran/pages/ayat_page.dart';
 
@@ -16,6 +17,8 @@ class _DashboardPageState extends State<DashboardPage> {
   void initState() {
     final suratCubit = context.read<SuratCubit>();
     suratCubit.getSurat();
+    final lastReadCubit = context.read<LokalCubit>();
+    lastReadCubit.getData();
     super.initState();
   }
 
@@ -109,12 +112,16 @@ class _DashboardPageState extends State<DashboardPage> {
                         Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
-                            Text(
-                              "Al-Fatihah",
-                              style: GoogleFonts.poppins(
-                                  fontSize: 14,
-                                  fontWeight: FontWeight.w600,
-                                  color: Colors.white),
+                            BlocBuilder<LokalCubit, String>(
+                              builder: (context, state) {
+                                return Text(
+                                  state,
+                                  style: GoogleFonts.poppins(
+                                      fontSize: 14,
+                                      fontWeight: FontWeight.w600,
+                                      color: Colors.white),
+                                );
+                              },
                             ),
                             Text(
                               "Ayah No: 1",
@@ -179,10 +186,15 @@ class _DashboardPageState extends State<DashboardPage> {
                         final surat = state.surat[index];
                         return InkWell(
                           onTap: () {
+                            context
+                                .read<LokalCubit>()
+                                .saveData(surat.namaLatin!);
                             Navigator.push(
                               context,
                               MaterialPageRoute(
-                                builder: (context) => const AyatPage(),
+                                builder: (context) => AyatPage(
+                                  surat: surat,
+                                ),
                               ),
                             );
                           },
